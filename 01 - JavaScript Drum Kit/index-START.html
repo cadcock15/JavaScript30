@@ -58,7 +58,27 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  function playSound(e) {
+    //console.log(e.keyCode);//debug
+    //const audio = document.querySelector('audio[data-key="${e.keyCode}"]');//doesnt work, singlequotes need to be backticks.
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);//backtick string literals have ${var} variable interpolation.
+    //const audio = document.querySelector("audio[data-key='" + e.keyCode + "']");//this is the equivalent string concactination instead of backtick literal.
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"`);//get elements of class key for css style manipulation
+    if(!audio) return;//stop function from running if key does not have coorisponding audio
+    //console.log(audio);//debug
+    key.classList.add('playing');//add the css style class 
+    audio.currentTime = 0;//rewind to start
+    audio.play();
+  }
+  function removeTransition(e) {
+    if(e.propertyName !== 'transform') return; //skip if not transform
+    //console.log(this);//debug
+    this.classList.remove('playing');
+  }
 
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+  window.addEventListener('keydown', playSound);
 </script>
 
 
